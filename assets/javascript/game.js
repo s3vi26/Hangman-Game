@@ -1,6 +1,6 @@
 
 //I wouldn't recommend changing these names. These id names match the layout if you change these names here make sure you change it on your html page as well.
-var ids = ['hangmanWord','wrongGuesses','guessesLeft','winCounter','lossCounter'];
+var ids = [`hangmanWord`,`wrongGuesses`,`guessesLeft`,`winCounter`,`lossCounter`];
 
 //finish declaring the rest of the variables we need. 
 ///**** Hint use the names in the ids array to finish the last 3 variables we need
@@ -8,7 +8,7 @@ var answerWord='';
 var winCounter = 0;
 var lossCounter= 0;
 var wrongGuesses= [];
-var guessesLeft= 10;
+var guessesLeft= 0;
 var hangmanWord= '';
 
 //Add how many names you want to this word bank. All names need to be lowercase.
@@ -30,8 +30,6 @@ function updateLetters(letter){
         //the for loop runs through all of the words letters
         // now if a letter matches, the if (below) comes in to play
         if(letter === answerWord[i]) {
-            var answerWordletter = answerWord[i]
-            hangmanWord[i] = answerWordletter;
 
             hangmanWord[i] =answerWord[i];
         }
@@ -46,7 +44,7 @@ function updateGuesses(letter){
     //Write the code needed to 
     //add this letter to the wrongGuesses array
     wrongGuesses.push(letter);
-    guessesleft--
+    guessesLeft--
 }
 
 function hideWord(arr) {
@@ -76,13 +74,13 @@ function validateInput(inputKey) {
 function takeTurn(letter){
     //Add an if/else statement here.
     //if the letter is in the answerWord i should see a call to the updateLetters function
-    if (letter === answerWord){
-        updateLetters() 
+    if (answerWord.indexOf(letter)>=0){
+        updateLetters(letter) 
         
     } 
     //otherwise i should see a call to the the updateGuesses function
     else {
-        updateGuesses() 
+        updateGuesses(letter)
         
     }
     // keep this line here
@@ -92,18 +90,18 @@ function takeTurn(letter){
 function updateScore(){
     //Add an if/else statement here.
     //if the user wins i should see a call to updateWin
-    if (condition) {
+    if (hangmanWord.indexOf("_")===-1) {
         updateWin()
     } 
-    //or if the user loses i should see a call to the updateLoss
-    else {
+    //or if the user loses i s0hould see a call to the updateLoss
+    else if (guessesLeft === 0){
         updateLoss()
     }
 }
 
 function updateWin() {
     //add what happens if the user wins code here
-
+    winCounter = winCounter+1
     //Make a call to the startGame function here. 
     //This call is here to start the game once a player wins.
     startGame()
@@ -112,7 +110,8 @@ function updateWin() {
 
 function updateLoss() {
     //add what happens if the user loses code here
-
+    lossCounter = lossCounter+1
+    
     //Make a call to the startGame function here.
     //This call is here to start the game once a player losses.
     startGame()
@@ -144,8 +143,10 @@ function print(arr) {
 function startGame() {
     
     //Add your board setup functions and or code here
-    var wrongGuesses = []
-    var guessesLeft = 10
+    wrongGuesses = []
+    guessesLeft = 10
+    answerWord = randomize(wordBank)
+    hangmanWord = hideWord(answerWord)
     print(ids)
 }
 
@@ -155,7 +156,7 @@ function startGame() {
 document.addEventListener('keyup', function(event){
     if(validateInput(event.key)){
         //make a call to the takeTurn Function
-        takeTurn();
+        takeTurn(event.key);
         //make a call to the updateScore function
         updateScore()
     };
